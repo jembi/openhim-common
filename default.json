@@ -2,8 +2,8 @@
   "version": "1.10.0",
   "minimumCoreVersion": "3.4.0",
   "protocol": "https",
-  "host": "localhost", // edit this be the host of the openhim-core instance you are connecting to
-  "port": 8080, // edit this be the port of the openhim-core instance you are connecting to
+  "host": "localhost",
+  "port": 8080,
   "title": "Admin Console",
   "footerTitle": "OpenHIM Administration Console",
   "footerPoweredBy": "<a href='http://openhim.org/' target='_blank'>Powered by OpenHIM</a>",

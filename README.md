@@ -1,6 +1,6 @@
 # OpenHIM Common
 
-1. Edit the `default.json` file to point to the **public** domain and port of your server. If you are jsut testing on localhost you can leave it set at the defaults, jsut remove the comments.
+1. Edit the `default.json` file to point to the **public** host and port of your server. If you are just testing on localhost you can leave it set at the defaults.
 
 2. Spin up the OpenHIM core and console easily with docker compose:
 
