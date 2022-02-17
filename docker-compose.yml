@@ -3,32 +3,61 @@ version: '3'
 services:
   mongo:
     container_name: openhim-mongo
-    ports:
-      - "27017:27017"
     image: mongo:3.4
-    
+    networks:
+      - openhim-net
+    restart: always
+    volumes:
+      - "mongo-data:/data/db"
   core:
     container_name: openhim-core
     image: jembi/openhim-core
     environment:
       - mongo_url=mongodb://mongo/openhim
       - mongo_atnaUrl=mongodb://mongo/openhim
-    ports:
-      - "8080:8080"
-      - "5000:5000"
-      - "5001:5001"
-      - "5050:5050"
-      - "5051:5051"
-      - "5052:5052"
-      - "7788:7788"
     depends_on:
       - mongo
-  
+    networks:
+      - openhim-net
+    volumes:
+      - ./conf/core:/usr/src/app/config
+    restart: always
+    healthcheck:
+      test: "curl -sSk https://openhim-core:8080/heartbeat || exit 1"
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
   console:
     container_name: openhim-console
     image: jembi/openhim-console
-    ports:
-        - "9000:80"
     volumes:
-      - ./default.json:/usr/share/nginx/html/config/default.json
-    
+      - ./conf/console:/usr/share/nginx/html/config/
+    networks:
+      - openhim-net
+    restart: always
+    healthcheck:
+      test: "curl -sS http://openhim-console || exit 1"
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  nginx:
+    image: nginx
+    volumes:
+      - ./conf/nginx:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - NGINX_HOST='him.s1.openimis.org'
+    command: /bin/bash -c "export NGINX_HOST &&  envsubst  '$$NGINX_HOST' < /etc/nginx/conf.d/openhim.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    networks:
+      - openhim-net
+    depends_on:
+      - console
+      - core
+    restart: always
+networks:
+  openhim-net:
+volumes:
+  mongo-data:
