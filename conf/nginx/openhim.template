@@ -41,7 +41,7 @@ server {
                 proxy_set_header   X-Forwarded-Host $server_name;
         }
 
-        location /queue/ {
+        location /channel/ {
                 proxy_pass http://core:5001/;
                 proxy_set_header   Host ${NGINX_HOST};
                 proxy_set_header   X-Real-IP $remote_addr;
