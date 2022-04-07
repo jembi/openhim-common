@@ -1,15 +1,15 @@
 version: '3'
 
 services:
-  mongo:
+  openhim-mongo:
     container_name: openhim-mongo
+    image: mongo:4.2
     ports:
       - "27017:27017"
-    image: mongo:3.4
     
-  core:
+  openhim-core:
     container_name: openhim-core
-    image: jembi/openhim-core
+    image: jembi/openhim-core:v7.0.2
     environment:
       - mongo_url=mongodb://mongo/openhim
       - mongo_atnaUrl=mongodb://mongo/openhim
@@ -24,9 +24,9 @@ services:
     depends_on:
       - mongo
   
-  console:
+  openhim-console:
     container_name: openhim-console
-    image: jembi/openhim-console
+    image: jembi/openhim-console:v1.14.3
     ports:
         - "9000:80"
     volumes:
